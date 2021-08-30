@@ -1,4 +1,5 @@
 # Discord tickets
+
 _[Majksa Commons](//github.com/majksa-commons)_
 
 <p>
@@ -15,42 +16,55 @@ _[Majksa Commons](//github.com/majksa-commons)_
 Java framework improving your experience developing any project in java.
 
 ## Summary
+
 1. [Installation](#installation)
     1. [Gradle](#gradle)
-    2. [Maven](#maven)  
+    2. [Maven](#maven)
 2. [How to use](#how-to-use)
 3. [Built With](#built-with)
 4. [Authors](#authors)
 5. [License](#license)
 
 ## Installation
-Make sure to replace `%version%` with the latest version number, or a commit hash, e.g. `1.0.0`.
-You can find this library [HERE](https://jitpack.io/#majksa-commons/discord-tickets)
 
-###  Maven
+Make sure to replace `%version%` with the latest version number, or a commit hash, e.g. `1.0.0`. You can find this
+library [HERE](https://jitpack.io/#majksa-commons/discord-tickets)
+
+### Maven
+
 Register the repository
+
 ```xml
+
 <repository>
     <id>jitpack.io</id>
     <url>https://jitpack.io</url>
 </repository>
 ```
+
 Now add the dependency itself
+
 ```xml
+
 <dependency>
     <groupId>com.github.majksa-commons</groupId>
     <artifactId>discord-tickets</artifactId>
     <version>%version%</version>
 </dependency>
 ```
-###  Gradle
+
+### Gradle
+
 Register the repository
+
 ```gradle
 repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
+
 Now add the dependency itself
+
 ```gradle
 dependencies {
     implementation 'com.github.majksa-commons:discord-tickets:%version%'
@@ -59,11 +73,42 @@ dependencies {
 
 ## How to use
 
+First you need to create a Ticketer object. The only option currently is to have it in a Category, but as soon as JDA
+will add support for Threads, we will also add it!
+Secondly, you need to wrap it inside a manager.
+And finally, if you want this to happen automatically, you can choose from the 3 provided controllers:
+- ButtonController
+- SlashCommandController
+- EmojiController
+
+Example usage:
+```java
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.components.Button;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
+
+class Test {
+
+    public static void startTickets(@Nonnull TextChannel channel) {
+        final CategoryTicketer ticketer = new CategoryTicketer(Objects.requireNonNull(channel.getParent()));
+        final Tickets manager = new Tickets(ticketer);
+        manager.setFormat("ticket-{member}");
+        final ButtonController controller = new ButtonController(manager, channel, new MessageBuilder().append("My epic message"), Button.primary("ticket-button", "Open ticket"));
+        controller.start();
+    }
+
+}
+```
+
 ## Built With
 
 * [Java 8](https://java.com)
 
 ## Authors
+
 * [Majksa (@maxa-ondrej)](https://github.com/maxa-ondrej)
 
 ## License
